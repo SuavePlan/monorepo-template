@@ -83,6 +83,11 @@
       "command": "bun run lint:primitive-host-integration"
     },
     {
+      "label": "lint:app-extraction",
+      "type": "shell",
+      "command": "bun run lint:app-extraction"
+    },
+    {
       "label": "lint:preflight",
       "type": "shell",
       "command": "bun run lint:preflight"

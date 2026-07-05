@@ -95,6 +95,16 @@
       "cache": true,
       "outputLogs": "errors-only"
     },
+    "//#lint:app-extraction": {
+      "inputs": [
+        "scripts/lint/check-app-extraction.ts",
+        "openspec/changes/*/proposal.md",
+        "openspec/archive/*/proposal.md"
+      ],
+      "outputs": [],
+      "cache": true,
+      "outputLogs": "errors-only"
+    },
     "//#lint:preflight": {
       "inputs": [
         "scripts/openspec/check-preflight.ts",

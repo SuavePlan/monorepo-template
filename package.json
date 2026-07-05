@@ -25,7 +25,7 @@
     "typescript": "catalog:"
   },
   "scripts": {
-    "lint": "bunx turbo lint lint:test-runner-imports lint:feature-layout lint:cross-package-contracts lint:conformance-tests lint:carry-forward-deps lint:verified-by lint:stage-smoke lint:primitive-host-integration lint:docs-tree",
+    "lint": "bunx turbo lint lint:test-runner-imports lint:feature-layout lint:cross-package-contracts lint:conformance-tests lint:carry-forward-deps lint:verified-by lint:stage-smoke lint:primitive-host-integration lint:app-extraction lint:docs-tree",
     "lint:test-runner-imports": "bun scripts/lint/check-test-runner-imports.ts",
     "lint:feature-layout": "bun scripts/lint/check-feature-layout.ts",
     "lint:cross-package-contracts": "bun scripts/lint/check-cross-package-contracts.ts",
@@ -35,6 +35,7 @@
     "lint:verified-by:archive": "bun scripts/lint/check-verified-by.ts --mode=archive",
     "lint:stage-smoke": "bun scripts/lint/check-stage-smoke.ts",
     "lint:primitive-host-integration": "bun scripts/lint/check-primitive-host-integration.ts",
+    "lint:app-extraction": "bun scripts/lint/check-app-extraction.ts",
     "lint:preflight": "bun scripts/openspec/check-preflight.ts",
     "lint:docs-tree": "bun scripts/docs/generate-all-docs.ts --check",
     "lint:md": "bunx markdownlint-cli2",
