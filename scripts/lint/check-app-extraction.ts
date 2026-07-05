@@ -43,13 +43,17 @@ const PACKAGE_CITATION_LINE_RE =
 
 /**
  * Strip fenced (``` / ~~~) code blocks, HTML comments, and 4-space/tab
- * indented lines from markdown before scanning it for headings or
- * assertions. Otherwise a quoted example, a commented-out draft, or an
- * illustrative indented snippet can masquerade as real content. Pragmatic,
- * not a full CommonMark parser — see
+ * indented lines from markdown before scanning it for headings, frontmatter
+ * fields, or assertions. Otherwise a quoted example, a commented-out draft,
+ * or an illustrative indented snippet can masquerade as real content — this
+ * applies just as much to a `**App**:`/`**Package**:` line quoted inside a
+ * fenced example as it does to a decoy section heading, so every caller
+ * that scans for either MUST strip first. Pragmatic, not a full CommonMark
+ * parser — see
  * docs/superpowers/specs/2026-07-05-app-package-extraction-design.md §2
  * for the adversarial cases this guards against, and its documented
- * residual limitations (unclosed fences, en-dash in None-identified).
+ * residual limitations (unclosed fences/comments, en-dash in
+ * None-identified).
  */
 function stripCodeBlocks(md: string): string {
     let out = md
@@ -63,13 +67,12 @@ function stripCodeBlocks(md: string): string {
 /**
  * Locate `## Reusable capability review` and return its body (everything
  * up to the next `## ` heading, or EOF), or `undefined` if no real heading
- * is found. The whole source is stripped BEFORE the heading search runs —
- * not just the text after wherever it first matches — so a decoy heading
- * quoted inside a fenced block or HTML comment earlier in the file can
- * never win the match.
+ * is found. Takes already-stripped markdown (see `stripCodeBlocks`) — the
+ * caller strips once and reuses the result for both the frontmatter scan
+ * and this section scan, so a decoy heading quoted inside a fenced block
+ * or HTML comment anywhere in the file can never win the match.
  */
-function extractSection(source: string): string | undefined {
-    const stripped = stripCodeBlocks(source);
+function extractSection(stripped: string): string | undefined {
     const headingMatch = SECTION_HEADING_RE.exec(stripped);
     if (!headingMatch) return undefined;
     const afterHeading = stripped.slice(
@@ -97,12 +100,13 @@ function extractCitations(body: string): string[] {
  * proposal, nothing to check.
  */
 export function scanProposal(source: string): ProposalScan | undefined {
-    const frontmatter = source.split("\n").slice(0, 30).join("\n");
+    const stripped = stripCodeBlocks(source);
+    const frontmatter = stripped.split("\n").slice(0, 30).join("\n");
     const appMatch = APP_FIELD_RE.exec(frontmatter);
     if (!appMatch?.[1]) return undefined;
 
     const hasConflictingPackageField = PACKAGE_FIELD_RE.test(frontmatter);
-    const section = extractSection(source);
+    const section = extractSection(stripped);
     if (section === undefined) {
         return {
             appName: appMatch[1],
@@ -128,7 +132,8 @@ async function loadArchivedPackages(): Promise<ReadonlySet<string>> {
     for await (const rel of g.scan({ cwd: REPO_ROOT })) {
         const abs = resolve(REPO_ROOT, rel);
         const source = await readFile(abs, "utf8");
-        const frontmatter = source.split("\n").slice(0, 30).join("\n");
+        const stripped = stripCodeBlocks(source);
+        const frontmatter = stripped.split("\n").slice(0, 30).join("\n");
         const m = PACKAGE_FIELD_RE.exec(frontmatter);
         if (m?.[1]) names.add(m[1]);
     }

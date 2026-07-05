@@ -202,6 +202,43 @@ describe("check-app-extraction / scanProposal", () => {
         expect(scan?.citedPackages).toEqual([]);
     });
 
+    it("does not flag a conflicting Package field when it only appears inside a fenced example", {
+        timeout: 5000,
+    }, () => {
+        const source = [
+            "**App**: my-app",
+            "",
+            "```markdown",
+            "**Package**: decoy-pkg",
+            "```",
+            "",
+            "## Reusable capability review",
+            "",
+            "None identified — this app has no generic technical capability.",
+        ].join("\n");
+        const scan = scanProposal(source);
+        expect(scan?.hasConflictingPackageField).toBe(false);
+    });
+
+    it("does not misdetect an app proposal from a decoy **App**: line inside a fenced example", {
+        timeout: 5000,
+    }, () => {
+        const source = [
+            "**Package**: some-pkg",
+            "",
+            "Here's an example of the app frontmatter convention:",
+            "",
+            "```markdown",
+            "**App**: legacy-dashboard",
+            "```",
+            "",
+            "## Why",
+            "",
+            "Some prose.",
+        ].join("\n");
+        expect(scanProposal(source)).toBeUndefined();
+    });
+
     it("reaches real content after a fenced example inside the section that embeds a ## line", {
         timeout: 5000,
     }, () => {
