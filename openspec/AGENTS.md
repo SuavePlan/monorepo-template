@@ -895,10 +895,10 @@ Extracted packages go through the exact same process as any other package
 folder, proposed and shipped independently — never folded into the app's
 own change folder.
 
-This gate runs as part of the aggregate `bun run lint` (see §3), and every
-change is expected to pass `bun run lint` before archiving (per the
-pre-ship sequence in §13) — so an app change cannot reach archive while it
-cites an unshipped package. There is no separate `--mode=archive` variant
+This gate runs as part of the aggregate `bun run lint`, and every change
+is expected to pass `bun run lint` before archiving (per the pre-ship
+sequence in §13) — so an app change cannot reach archive while it cites an
+unshipped package. There is no separate `--mode=archive` variant
 the way §20's gate has, because this check is only ever meaningful before
 archival.
 
