@@ -1,0 +1,54 @@
+{
+    // Sensible defaults for the monorepo. See:
+    // https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+    "config": {
+        "default": true,
+        // Long lines are fine in docs that carry code / API refs / paths.
+        "MD013": false,
+        // Enforce dash bullets repo-wide. The doc-tree generator always emits
+        // `-` for auto-docs lists; without a fixed style, MD004's "consistent"
+        // default flips those `-` bullets to `+`/`*` in any README that has a
+        // hand-written `+`/`*` bullet earlier, which the generator then reverts
+        // on the next run — a doc-`.md` flip-flop. Pinning "dash" makes the two
+        // tools agree.
+        "MD004": { "style": "dash" },
+        // Allow HTML (we occasionally need <details>, <br>, <sub>, badges).
+        "MD033": false,
+        // Allow duplicate headings under different parents (e.g. "Example"
+        // appearing in both "Basic Example" and "Advanced Example" trees).
+        "MD024": { "siblings_only": true },
+        // Bare URLs are fine in changelogs and tables.
+        "MD034": false,
+        // Allow trailing punctuation in headings (colons etc).
+        "MD026": false,
+        // Enforce fenced-code language hint so docs stay scannable.
+        "MD040": true,
+        // Allow **Bold** sub-section dividers inside API/Methods sections —
+        // promoting them to real headings would inflate the TOC.
+        "MD036": false,
+        // Don't insist on a first-line H1 — we occasionally have YAML front
+        // matter or status badges before the title.
+        "MD041": false
+    },
+    "globs": ["**/*.md", "**/*.mdx"],
+    "ignores": [
+        "**/node_modules/**",
+        "**/dist/**",
+        "**/coverage/**",
+        "**/.turbo/**",
+        "**/.git/**",
+        "**/.remember/**",
+        "**/lcov-report/**",
+        // Generated test artifacts — transient, not authored docs.
+        "**/playwright-report/**",
+        "**/test-results/**",
+        "**/CHANGELOG.md",
+        // Archived openspec changes are frozen historical records.
+        "openspec/archive/**",
+        // Plan docs embed inline doc stubs with repeated section headings.
+        "docs/superpowers/plans/**",
+        "docs/superpowers/specs/**",
+        // Installed plugin marketplace files are externally managed.
+        ".claude/plugins/suaveplan-plugins/**"
+    ]
+}

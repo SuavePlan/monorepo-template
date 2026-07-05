@@ -1,0 +1,61 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "bun run build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "format",
+      "type": "shell",
+      "command": "bun run format"
+    },
+    {
+      "label": "lint",
+      "type": "shell",
+      "command": "bun run lint"
+    },
+    {
+      "label": "lint:md",
+      "type": "shell",
+      "command": "bun run lint:md"
+    },
+    {
+      "label": "lint:md:fix",
+      "type": "shell",
+      "command": "bun run lint:md:fix"
+    },
+    {
+      "label": "check",
+      "type": "shell",
+      "command": "bun run check"
+    },
+    {
+      "label": "check:all",
+      "type": "shell",
+      "command": "bun run check:all"
+    },
+    {
+      "label": "test",
+      "type": "shell",
+      "command": "bun run test",
+      "group": "test"
+    },
+    {
+      "label": "typecheck",
+      "type": "shell",
+      "command": "bun run typecheck"
+    },
+    {
+      "label": "gate",
+      "type": "shell",
+      "command": "bun run gate"
+    }
+  ]
+}
