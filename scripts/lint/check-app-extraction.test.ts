@@ -158,6 +158,21 @@ describe("check-app-extraction / scanProposal", () => {
         expect(scan?.citedPackages).toEqual(["retry-client", "http-cache"]);
     });
 
+    it("de-duplicates a package cited twice in the same section", {
+        timeout: 5000,
+    }, () => {
+        const source = [
+            "**App**: my-app",
+            "",
+            "## Reusable capability review",
+            "",
+            "- `retry-client` — for outbound calls",
+            "- `retry-client` — also for the webhook sender",
+        ].join("\n");
+        const scan = scanProposal(source);
+        expect(scan?.citedPackages).toEqual(["retry-client"]);
+    });
+
     it("captures a citation with trailing rationale text after the backtick", {
         timeout: 5000,
     }, () => {
