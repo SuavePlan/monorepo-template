@@ -17,6 +17,7 @@ Full per-script detail (flags, reads/writes, exit codes) lives in `scripts/READM
 | "verified-by" lint fails | `lint/check-verified-by.ts` | add a `**Verified by:**` test citation or `**Verified by (gate):**` line to the spec requirement |
 | "stage-smoke" lint fails | `lint/check-stage-smoke.ts` | add the missing `N.0` e2e/stage-smoke row to that Stage block in `tasks.md` |
 | "primitive-host-integration" lint fails | `lint/check-primitive-host-integration.ts` | add the missing `## Concrete consumer` / `## Host bridge` / `## End-to-end test` section to `proposal.md` |
+| "app-extraction" lint fails | `lint/check-app-extraction.ts` | add a `## Reusable capability review` section to the app's `proposal.md` (either `None identified — <reason>` or package citations), and confirm every cited package has an archived OpenSpec change |
 | "preflight" lint fails | `openspec/check-preflight.ts` | restore Section 0 boilerplate in `tasks.md` from `openspec/templates/tasks.md` |
 | "docs-tree" lint fails / README looks stale | `docs/generate-all-docs.ts --check` | run `bun run docs:generate` to rewrite, then commit |
 | `conformance` reports missing Verified-by / unused error code / unparsed schema / public `unknown` | `openspec/conformance.ts` | see its six checks in `scripts/README.md`; this is the deep implementation↔spec check, separate from `check-verified-by.ts`'s shallower spec-only scan |

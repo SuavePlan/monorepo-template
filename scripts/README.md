@@ -14,6 +14,7 @@ Root-level tooling — not a workspace package, so it's exempt from the `package
 | `lint:verified-by` / `lint:verified-by:archive` | `lint/check-verified-by.ts --mode=author\|archive` |
 | `lint:stage-smoke` | `lint/check-stage-smoke.ts` |
 | `lint:primitive-host-integration` | `lint/check-primitive-host-integration.ts` |
+| `lint:app-extraction` | `lint/check-app-extraction.ts` |
 | `lint:preflight` | `openspec/check-preflight.ts` |
 | `lint:docs-tree` | `docs/generate-all-docs.ts --check` |
 | `docs:generate` | `docs/generate-all-docs.ts` |
@@ -46,6 +47,7 @@ All lint scripts are read-only checks: exit `0` clean, `1` on violation (a coupl
 
 OpenSpec/CLAUDE.md rule gates. All read-only; all fail with exit `1` on violation unless noted.
 
+- **`check-app-extraction.ts`** — enforces §22: an app proposal (`proposal.md` carrying `**App**: <name>`) must include a `## Reusable capability review` section (either `None identified — <reason>` or package citations), must not also carry `**Package**:`, and every cited package must already be shipped (a matching `**Package**: <name>` in `openspec/archive/*/proposal.md`). Companion `.test.ts` exercises the exported `scanProposal`.
 - **`check-carry-forward-deps.ts`** — a `tasks.md` gate row marked "carry forward from gate 2.X" may not depend on another still-open gate row (or a nonexistent one).
 - **`check-conformance-tests.ts`** — any package that depends on a "contract" package (one exporting `./testing` with a `run<X>Conformance` function) must have its own conformance test importing it, unless opted out via `package.json#conformanceSkip`.
 - **`check-cross-package-contracts.ts`** — a type/interface `implements`-ed across package boundaries must live in a designated contract package (see `contract-packages.json` below), unless the declaration line has a `// @cross-package-contract` comment.
