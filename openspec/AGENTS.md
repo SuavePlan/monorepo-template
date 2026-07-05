@@ -840,3 +840,81 @@ test -d packages/<contract-pkg>/src/testing || { echo "FATAL: <contract-pkg> con
 ```
 
 This "shipped deps test" pattern prevents a consumer agent from looping against a dependency that was never actually shipped.
+
+---
+
+## 22. Apps must extract reusable capability into packages, shipped first
+
+A pattern worth guarding against: an app absorbs functionality that would
+clearly benefit other apps or future work — an auth flow, a caching layer,
+a formatting utility, an API client, a UI primitive — and that
+functionality never gets extracted, so it's either duplicated later or
+permanently trapped inside one app's `src/`.
+
+### The rule
+
+Every OpenSpec change whose `proposal.md` carries a `**App**: <name>`
+frontmatter line (naming an `apps/<name>/` target, parallel to the existing
+`**Package**:` field for package changes) MUST include a
+`## Reusable capability review` section, and MUST NOT also carry a
+`**Package**:` line — apps and packages are always separate change folders
+(§0c: one capability folder per package). A change needing both gets two folders.
+
+That section must contain either:
+
+- An explicit `None identified` line followed by a real, non-empty reason
+  on the same line (e.g. `None identified — this app has no generic
+  technical capability; it's a thin dashboard over an existing API`), or
+- One or more package citations: a bullet list where each line starts with
+  a single backtick-fenced package name, optionally followed by a short
+  rationale on the same line (e.g. `` - `retry-client` — shared HTTP retry
+  policy ``).
+
+A bare `None identified` with no reason satisfies neither branch and is a
+violation — the gate does not judge whether the reason is a *good* one,
+only that a real justification was written down.
+
+**Heuristic for "reusable"** (a judgment call for the proposal's author and
+reviewer, not automated): a candidate for extraction is generic technical
+capability — an auth flow, caching, formatting, an API client, a UI
+primitive, a queue abstraction — rather than app-specific business logic;
+something a plausible second app in this monorepo would also want; or
+logic that would otherwise be duplicated.
+
+### Ordering mandate
+
+Every package named in the `## Reusable capability review` section MUST
+already exist as a fully shipped OpenSpec change — a folder under
+`openspec/archive/<yyyy-mm-dd>-<pkg>/` with `**Package**: <pkg>` in its
+`proposal.md` — before the app's own change is allowed to archive. This
+generalizes §21's "contract package ships before consumers" ordering from
+shared type contracts to any reusable capability.
+
+Extracted packages go through the exact same process as any other package
+(`CLAUDE.md` §2, the `pkg-new` skill): their own `openspec/changes/<pkg>/`
+folder, proposed and shipped independently — never folded into the app's
+own change folder.
+
+This gate runs as part of the aggregate `bun run lint` (see §3), and every
+change is expected to pass `bun run lint` before archiving (per the
+pre-ship sequence in §13) — so an app change cannot reach archive while it
+cites an unshipped package. There is no separate `--mode=archive` variant
+the way §20's gate has, because this check is only ever meaningful before
+archival.
+
+### Lint gate
+
+```bash
+bun scripts/lint/check-app-extraction.ts
+```
+
+For every `openspec/changes/*/proposal.md` carrying `**App**: <name>`:
+
+- Also carries `**Package**:` → violation (apps and packages must be
+  separate change folders).
+- Missing `## Reusable capability review` section → violation.
+- Section present but neither a `None identified` line with a real reason
+  nor any package citation → violation.
+- Any cited package with no matching `**Package**: <name>` in
+  `openspec/archive/*/proposal.md` → violation naming the unshipped
+  package.
