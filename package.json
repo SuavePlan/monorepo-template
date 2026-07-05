@@ -1,0 +1,103 @@
+{
+  "name": "monorepo-template",
+  "version": "0.1.0",
+  "description": "SuavePlan monorepo template — scaffolds a Bun + Turbo + Biome monorepo",
+  "type": "module",
+  "private": true,
+  "packageManager": "bun@1.3.14",
+  "engines": {
+    "bun": ">=1.3.14"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "catalog:tooling",
+    "@suaveplan/biome-config": "^0.1.5",
+    "@suaveplan/error": "^0.1.0",
+    "@suaveplan/testing": "^0.1.0",
+    "@suaveplan/testing-e2e": "^0.1.0",
+    "@suaveplan/types": "^0.1.0",
+    "@suaveplan/typescript-config": "^0.1.0",
+    "@suaveplan/vite-config": "^0.1.1",
+    "@types/bun": "catalog:",
+    "@types/node": "catalog:",
+    "bun-types": "catalog:",
+    "markdownlint-cli2": "catalog:tooling",
+    "turbo": "catalog:tooling",
+    "typescript": "catalog:"
+  },
+  "scripts": {
+    "lint": "bunx turbo lint lint:test-runner-imports lint:feature-layout lint:cross-package-contracts lint:conformance-tests lint:carry-forward-deps lint:verified-by lint:stage-smoke lint:primitive-host-integration lint:docs-tree",
+    "lint:test-runner-imports": "bun scripts/lint/check-test-runner-imports.ts",
+    "lint:feature-layout": "bun scripts/lint/check-feature-layout.ts",
+    "lint:cross-package-contracts": "bun scripts/lint/check-cross-package-contracts.ts",
+    "lint:conformance-tests": "bun scripts/lint/check-conformance-tests.ts",
+    "lint:carry-forward-deps": "bun scripts/lint/check-carry-forward-deps.ts",
+    "lint:verified-by": "bun scripts/lint/check-verified-by.ts --mode=author",
+    "lint:verified-by:archive": "bun scripts/lint/check-verified-by.ts --mode=archive",
+    "lint:stage-smoke": "bun scripts/lint/check-stage-smoke.ts",
+    "lint:primitive-host-integration": "bun scripts/lint/check-primitive-host-integration.ts",
+    "lint:preflight": "bun scripts/openspec/check-preflight.ts",
+    "lint:docs-tree": "bun scripts/docs/generate-all-docs.ts --check",
+    "lint:md": "bunx markdownlint-cli2",
+    "lint:md:fix": "bunx markdownlint-cli2 --fix",
+    "check": "bunx biome check --write --unsafe --max-diagnostics=20000",
+    "check:changed": "bunx biome check --changed --write --unsafe",
+    "check:all": "bun run check && bun run lint:md:fix",
+    "format": "bunx biome format --write --max-diagnostics=20000",
+    "format:changed": "bunx biome format --changed --write",
+    "fcc": "bun run format:changed && bun run check:changed",
+    "typecheck": "bunx turbo typecheck",
+    "test": "bunx turbo test --continue=dependencies-successful",
+    "test:coverage": "bunx turbo test:coverage --continue=dependencies-successful",
+    "test:changed": "bunx turbo test:coverage --affected",
+    "build": "bunx turbo build --continue=dependencies-successful",
+    "build:full": "bunx turbo lint typecheck && bun run check:all && bunx turbo test:coverage build --continue=dependencies-successful",
+    "docs:generate": "bun scripts/docs/generate-all-docs.ts",
+    "docs:check": "bunx turbo docs:check",
+    "manifest:generate": "bun scripts/manifest/generate-manifest.ts",
+    "manifest:check": "bun scripts/manifest/generate-manifest.ts --check",
+    "conformance": "bun scripts/openspec/conformance.ts",
+    "dev": "bunx turbo dev",
+    "gate": "bun run lint && bunx --bun turbo typecheck test docs:check"
+  },
+  "workspaces": {
+    "packages": ["apps/*", "packages/*/*", "e2e/*"],
+    "catalog": {
+      "typescript": "5.9.2",
+      "tslib": "2.6.2",
+      "@types/node": "25.6.0",
+      "bun-types": "1.3.14",
+      "@types/bun": "1.3.14"
+    },
+    "catalogs": {
+      "tooling": {
+        "@biomejs/biome": "^2.5.1",
+        "turbo": "^2.9.18",
+        "markdownlint-cli2": "^0.18.1"
+      },
+      "testing": {
+        "vitest": "^4.0.7",
+        "@vitest/coverage-istanbul": "^4.0.7",
+        "happy-dom": "^20.0.0",
+        "fast-check": "^3.23.2",
+        "@playwright/test": "^1.48.2",
+        "@testing-library/react": "^16.3.0",
+        "@testing-library/jest-dom": "^6.9.1",
+        "@testing-library/user-event": "^14.6.1",
+        "@testing-library/dom": "^10.4.0",
+        "@vitejs/plugin-react": "^5.0.4",
+        "react": "19.2.0",
+        "react-dom": "19.2.0",
+        "@types/react": "19.2.0",
+        "@types/react-dom": "19.2.0"
+      },
+      "build": {
+        "vite": "^6.0.0",
+        "vite-plugin-dts": "~4.5.0",
+        "tslib": "2.6.2",
+        "@vitejs/plugin-react": "^5.0.4",
+        "@tailwindcss/vite": "4.1.5",
+        "tailwindcss": "4.1.5"
+      }
+    }
+  }
+}

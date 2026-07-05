@@ -1,0 +1,4 @@
+install.optional = true
+
+[install.scopes]
+"@suaveplan" = { url = "https://npmjs.fq.io/", token = "$NPM_TOKEN" }

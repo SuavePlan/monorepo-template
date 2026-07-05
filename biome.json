@@ -1,0 +1,175 @@
+{
+    "root": true,
+    "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+    "files": {
+        "ignoreUnknown": true,
+        "includes": [
+            "*.ts",
+            "*.js",
+            "!**/dist",
+            "!**/coverage",
+            "!**/worktrees",
+            "!**/.turbo",
+            "apps/*/src/**/*.ts",
+            "apps/*/src/**/*.tsx",
+            "apps/*/src/**/*.js",
+            "apps/*/src/**/*.jsx",
+            "apps/*/tests/**/*.ts",
+            "apps/*/tests/**/*.tsx",
+            "packages/*/*/src/**/*.ts",
+            "packages/*/*/src/**/*.tsx",
+            "packages/*/*/src/**/*.js",
+            "packages/*/*/src/**/*.jsx",
+            "packages/*/*/tests/**/*.ts",
+            "packages/*/*/tests/**/*.tsx",
+            "e2e/*/tests/**/*.ts",
+            "e2e/*/src/**/*.ts",
+
+            "scripts/**/*.ts",
+            "scripts/**/*.js"
+        ]
+    },
+    "assist": { "actions": { "source": { "organizeImports": "on" } } },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "preset": "recommended",
+            "style": {
+                "noNonNullAssertion": "off",
+                "noParameterAssign": "off",
+                "useConst": "error",
+                "useAsConstAssertion": "error",
+                "useDefaultParameterLast": "error",
+                "useEnumInitializers": "error",
+                "useSelfClosingElements": "error",
+                "useSingleVarDeclarator": "error",
+                "noUnusedTemplateLiteral": "error",
+                "useNumberNamespace": "error",
+                "noInferrableTypes": "error",
+                "noUselessElse": "error"
+            },
+            "security": {
+                "noDangerouslySetInnerHtml": "off"
+            },
+            "complexity": {
+                "noForEach": "error",
+                "useLiteralKeys": "off",
+                "noUselessConstructor": "off"
+            },
+            "suspicious": {
+                "noRedeclare": "off",
+                "noExplicitAny": "error",
+                "noExportsInTest": "off",
+                "noAssignInExpressions": "off",
+                "noFallthroughSwitchClause": "off"
+            },
+            "correctness": {
+                "noInnerDeclarations": "off",
+                "noPrecisionLoss": "off",
+                "noUnusedVariables": "error",
+                "useExhaustiveDependencies": "warn",
+                "noInvalidUseBeforeDeclaration": "warn"
+            },
+            "a11y": {
+                "useButtonType": "warn",
+                "noLabelWithoutControl": "warn"
+            }
+        }
+    },
+    "formatter": {
+        "enabled": true,
+        "formatWithErrors": false,
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineWidth": 80,
+        "lineEnding": "lf"
+    },
+    "json": {
+        "formatter": {
+            "lineEnding": "lf"
+        }
+    },
+    "javascript": {
+        "formatter": {
+            "lineEnding": "lf",
+            "quoteStyle": "double",
+            "trailingCommas": "es5",
+            "semicolons": "always"
+        }
+    },
+    "css": {
+        "linter": {
+            "enabled": false
+        },
+        "formatter": {
+            "enabled": false
+        }
+    },
+    "overrides": [
+        {
+            "includes": ["**/*.data.ts", "**/*.data.tsx"],
+            "formatter": { "enabled": false },
+            "linter": {
+                "rules": {
+                    "suspicious": {
+                        "noApproximativeNumericConstant": "off"
+                    }
+                }
+            }
+        },
+        {
+            "includes": [
+                "**/*.test.ts",
+                "**/*.test.tsx",
+                "**/*.test.js",
+                "**/*.spec.ts",
+                "**/*.spec.tsx",
+                "**/*.spec.js"
+            ],
+            "linter": {
+                "rules": {
+                    "a11y": {
+                        "useButtonType": "off"
+                    },
+                    "complexity": {
+                        "noForEach": "off"
+                    },
+                    "correctness": {
+                        "useHookAtTopLevel": "off",
+                        "noUnreachable": "off",
+                        "noUnusedFunctionParameters": "off"
+                    },
+                    "style": {
+                        "noNonNullAssertion": "off"
+                    },
+                    "suspicious": {
+                        "noExplicitAny": "off",
+                        "noRedeclare": "off",
+                        "noTemplateCurlyInString": "off",
+                        "useIterableCallbackReturn": "off"
+                    }
+                }
+            }
+        },
+        {
+            "includes": ["**/*.stories.ts", "**/*.stories.tsx"],
+            "linter": {
+                "rules": {
+                    "a11y": {
+                        "useButtonType": "off",
+                        "useKeyWithMouseEvents": "warn"
+                    },
+                    "complexity": {
+                        "noForEach": "warn"
+                    },
+                    "correctness": {
+                        "useExhaustiveDependencies": "warn"
+                    },
+                    "suspicious": {
+                        "noArrayIndexKey": "warn"
+                    }
+                }
+            }
+        }
+    ]
+}

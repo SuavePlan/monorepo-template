@@ -1,0 +1,186 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "stream",
+  "globalDependencies": [
+    ".env",
+    "tsconfig.base.json",
+    "tsconfig.json",
+    "package.json",
+    "biome.json",
+    "scripts/lib/**",
+    "scripts/docs/**",
+    "scripts/lint/contract-packages.json",
+    "scripts/lint/feature-layout-baseline.json",
+    "scripts/lint/primitives.json"
+  ],
+  "globalEnv": ["NODE_ENV", "NPM_TOKEN"],
+  "globalPassThroughEnv": ["CI"],
+  "tasks": {
+    "//#lint:test-runner-imports": {
+      "inputs": [
+        "scripts/lint/check-test-runner-imports.ts",
+        "packages/*/*/package.json",
+        "packages/*/*/src/**/*.ts",
+        "packages/*/*/src/**/*.tsx"
+      ],
+      "outputs": [],
+      "cache": true,
+      "outputLogs": "errors-only"
+    },
+    "//#lint:feature-layout": {
+      "inputs": [
+        "scripts/lint/check-feature-layout.ts",
+        "scripts/lint/feature-layout-baseline.json",
+        "packages/*/*/src/**/*.ts",
+        "packages/*/*/src/**/*.tsx"
+      ],
+      "outputs": [],
+      "cache": true,
+      "outputLogs": "errors-only"
+    },
+    "//#lint:cross-package-contracts": {
+      "inputs": [
+        "scripts/lint/check-cross-package-contracts.ts",
+        "scripts/lint/contract-packages.json",
+        "packages/*/*/src/**/*.ts"
+      ],
+      "outputs": [],
+      "cache": true,
+      "outputLogs": "errors-only"
+    },
+    "//#lint:conformance-tests": {
+      "inputs": [
+        "scripts/lint/check-conformance-tests.ts",
+        "packages/*/*/package.json",
+        "packages/*/*/tests/conformance/**"
+      ],
+      "outputs": [],
+      "cache": true,
+      "outputLogs": "errors-only"
+    },
+    "//#lint:carry-forward-deps": {
+      "inputs": [
+        "scripts/lint/check-carry-forward-deps.ts",
+        "openspec/changes/*/tasks.md"
+      ],
+      "outputs": [],
+      "cache": true,
+      "outputLogs": "errors-only"
+    },
+    "//#lint:verified-by": {
+      "inputs": [
+        "scripts/lint/check-verified-by.ts",
+        "openspec/changes/*/specs/*/spec.md"
+      ],
+      "outputs": [],
+      "cache": true,
+      "outputLogs": "errors-only"
+    },
+    "//#lint:stage-smoke": {
+      "inputs": [
+        "scripts/lint/check-stage-smoke.ts",
+        "openspec/changes/*/tasks.md"
+      ],
+      "outputs": [],
+      "cache": true,
+      "outputLogs": "errors-only"
+    },
+    "//#lint:primitive-host-integration": {
+      "inputs": [
+        "scripts/lint/check-primitive-host-integration.ts",
+        "scripts/lint/primitives.json",
+        "openspec/changes/*/proposal.md"
+      ],
+      "outputs": [],
+      "cache": true,
+      "outputLogs": "errors-only"
+    },
+    "//#lint:preflight": {
+      "inputs": [
+        "scripts/openspec/check-preflight.ts",
+        "openspec/changes/*/tasks.md"
+      ],
+      "outputs": [],
+      "cache": true,
+      "outputLogs": "errors-only"
+    },
+    "//#lint:docs-tree": {
+      "inputs": [
+        "scripts/docs/**",
+        "scripts/lib/doc-tree.ts",
+        "packages/**/*.md",
+        "packages/**/package.json",
+        "README.md"
+      ],
+      "outputs": [],
+      "cache": true,
+      "outputLogs": "errors-only"
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*",
+        "tsconfig.json",
+        "vite.config.ts",
+        "vitest.config.ts"
+      ],
+      "outputs": ["dist/**", "!dist/**/*.map"],
+      "outputLogs": "new-only"
+    },
+    "lint": {
+      "inputs": ["src/**/*.ts", "src/**/*.tsx", "biome.json", "package.json"],
+      "cache": true,
+      "outputLogs": "errors-only"
+    },
+    "docs:check": {
+      "inputs": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.md"],
+      "cache": true,
+      "outputLogs": "errors-only"
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**/*.ts", "src/**/*.tsx", "tsconfig.json"],
+      "cache": true,
+      "outputLogs": "errors-only"
+    },
+    "test": {
+      "dependsOn": ["^build", "build"],
+      "inputs": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.test.ts",
+        "src/**/*.test.tsx",
+        "vitest.config.ts",
+        "package.json"
+      ],
+      "outputs": [],
+      "cache": true,
+      "outputLogs": "new-only"
+    },
+    "test:watch": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true,
+      "outputLogs": "new-only"
+    },
+    "test:coverage": {
+      "dependsOn": ["^build", "build"],
+      "inputs": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.test.ts",
+        "src/**/*.test.tsx",
+        "vitest.config.ts",
+        "package.json"
+      ],
+      "outputs": ["coverage/**"],
+      "cache": true,
+      "outputLogs": "new-only"
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "extends": "@suaveplan/typescript-config/base.json",
+    "compilerOptions": {
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
+        "importHelpers": true,
+        "incremental": true,
+        "composite": true
+    },
+    "exclude": ["**/dist", "**/node_modules", "**/coverage", "**/.turbo"]
+}

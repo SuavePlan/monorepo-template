@@ -1,0 +1,27 @@
+wip
+node_modules
+*.tmp_modules
+dist/
+.turbo
+.DS_Store
+coverage
+.env
+.env.local
+.env.*.local
+*.log
+*.tsbuildinfo
+.vite
+.remember
+.claude/scheduled_tasks.lock
+.claude/worktrees/
+lcov-report
+playwright-report
+.playwright-mcp
+test-results
+coverage.json
+tmp
+
+# Password-manager / secrets exports — never commit
+*.1pux
+*.1pif
+*.opvault
