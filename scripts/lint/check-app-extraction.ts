@@ -121,3 +121,72 @@ export function scanProposal(source: string): ProposalScan | undefined {
         citedPackages: extractCitations(section),
     };
 }
+
+async function loadArchivedPackages(): Promise<ReadonlySet<string>> {
+    const names = new Set<string>();
+    const g = new Glob("openspec/archive/*/proposal.md");
+    for await (const rel of g.scan({ cwd: REPO_ROOT })) {
+        const abs = resolve(REPO_ROOT, rel);
+        const source = await readFile(abs, "utf8");
+        const frontmatter = source.split("\n").slice(0, 30).join("\n");
+        const m = PACKAGE_FIELD_RE.exec(frontmatter);
+        if (m?.[1]) names.add(m[1]);
+    }
+    return names;
+}
+
+async function main(): Promise<void> {
+    const violations: string[] = [];
+    const archivedPackages = await loadArchivedPackages();
+
+    const g = new Glob("openspec/changes/*/proposal.md");
+    let scanned = 0;
+    for await (const rel of g.scan({ cwd: REPO_ROOT })) {
+        const abs = resolve(REPO_ROOT, rel);
+        const source = await readFile(abs, "utf8");
+        const scan = scanProposal(source);
+        if (scan === undefined) continue;
+        scanned++;
+
+        if (scan.hasConflictingPackageField) {
+            violations.push(
+                `${rel}  proposal for app '${scan.appName}' also carries **Package**: — apps and packages must be separate change folders (§0c)`
+            );
+        }
+        if (!scan.hasSection) {
+            violations.push(
+                `${rel}  app '${scan.appName}' proposal.md lacks a '## Reusable capability review' section`
+            );
+            continue;
+        }
+        if (!scan.noneIdentified && scan.citedPackages.length === 0) {
+            violations.push(
+                `${rel}  app '${scan.appName}': section present but neither states 'None identified — <reason>' nor cites any package`
+            );
+        }
+        for (const pkg of scan.citedPackages) {
+            if (!archivedPackages.has(pkg)) {
+                violations.push(
+                    `${rel}  app '${scan.appName}' cites package '${pkg}' which is not yet shipped (no matching openspec/archive/*/proposal.md with **Package**: ${pkg})`
+                );
+            }
+        }
+    }
+
+    if (violations.length === 0) {
+        console.log(
+            `OK  ${scanned} app proposal(s) scanned; no §22 violations.`
+        );
+        return;
+    }
+    console.error(`FAIL  ${violations.length} §22 violation(s):`);
+    for (const v of violations) console.error(`  ${v}`);
+    console.error(
+        "\n§22: every app proposal needs a '## Reusable capability review' section (a real 'None identified — <reason>' or package citations), and cited packages must already be archived."
+    );
+    process.exit(1);
+}
+
+if (import.meta.main) {
+    await main();
+}
