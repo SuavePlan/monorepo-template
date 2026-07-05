@@ -24,9 +24,6 @@
     "packages/tooling/biome-config": {
       "name": "@repo/biome-config",
       "version": "0.0.0",
-      "devDependencies": {
-        "@suaveplan/biome-config": "^0.1.5",
-      },
     },
     "packages/tooling/typescript-config": {
       "name": "@repo/typescript-config",
@@ -45,6 +42,7 @@
       "devDependencies": {
         "@repo/biome-config": "workspace:^",
         "@repo/typescript-config": "workspace:^",
+        "@suaveplan/biome-config": "^0.1.5",
         "@suaveplan/testing": "^0.1.0",
         "@vitest/coverage-istanbul": "catalog:testing",
         "typescript": "catalog:",
