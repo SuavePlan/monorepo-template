@@ -34,5 +34,6 @@
   "editor.defaultFormatter": "biomejs.biome",
   "terminal.integrated.defaultProfile.osx": "zsh",
   "testing.automaticallyOpenTestResults": "neverOpen",
-  "npm.packageManager": "bun"
+  "npm.packageManager": "bun",
+  "npm.autoDetect": "off"
 }

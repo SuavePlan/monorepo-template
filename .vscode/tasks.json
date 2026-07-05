@@ -12,14 +12,85 @@
       "problemMatcher": []
     },
     {
+      "label": "build:full",
+      "type": "shell",
+      "command": "bun run build:full",
+      "group": "build"
+    },
+    {
       "label": "format",
       "type": "shell",
       "command": "bun run format"
     },
     {
+      "label": "format:changed",
+      "type": "shell",
+      "command": "bun run format:changed"
+    },
+    {
+      "label": "fcc",
+      "type": "shell",
+      "command": "bun run fcc"
+    },
+    {
       "label": "lint",
       "type": "shell",
       "command": "bun run lint"
+    },
+    {
+      "label": "lint:test-runner-imports",
+      "type": "shell",
+      "command": "bun run lint:test-runner-imports"
+    },
+    {
+      "label": "lint:feature-layout",
+      "type": "shell",
+      "command": "bun run lint:feature-layout"
+    },
+    {
+      "label": "lint:cross-package-contracts",
+      "type": "shell",
+      "command": "bun run lint:cross-package-contracts"
+    },
+    {
+      "label": "lint:conformance-tests",
+      "type": "shell",
+      "command": "bun run lint:conformance-tests"
+    },
+    {
+      "label": "lint:carry-forward-deps",
+      "type": "shell",
+      "command": "bun run lint:carry-forward-deps"
+    },
+    {
+      "label": "lint:verified-by",
+      "type": "shell",
+      "command": "bun run lint:verified-by"
+    },
+    {
+      "label": "lint:verified-by:archive",
+      "type": "shell",
+      "command": "bun run lint:verified-by:archive"
+    },
+    {
+      "label": "lint:stage-smoke",
+      "type": "shell",
+      "command": "bun run lint:stage-smoke"
+    },
+    {
+      "label": "lint:primitive-host-integration",
+      "type": "shell",
+      "command": "bun run lint:primitive-host-integration"
+    },
+    {
+      "label": "lint:preflight",
+      "type": "shell",
+      "command": "bun run lint:preflight"
+    },
+    {
+      "label": "lint:docs-tree",
+      "type": "shell",
+      "command": "bun run lint:docs-tree"
     },
     {
       "label": "lint:md",
@@ -37,9 +108,19 @@
       "command": "bun run check"
     },
     {
+      "label": "check:changed",
+      "type": "shell",
+      "command": "bun run check:changed"
+    },
+    {
       "label": "check:all",
       "type": "shell",
       "command": "bun run check:all"
+    },
+    {
+      "label": "typecheck",
+      "type": "shell",
+      "command": "bun run typecheck"
     },
     {
       "label": "test",
@@ -48,9 +129,48 @@
       "group": "test"
     },
     {
-      "label": "typecheck",
+      "label": "test:coverage",
       "type": "shell",
-      "command": "bun run typecheck"
+      "command": "bun run test:coverage",
+      "group": "test"
+    },
+    {
+      "label": "test:changed",
+      "type": "shell",
+      "command": "bun run test:changed",
+      "group": "test"
+    },
+    {
+      "label": "docs:generate",
+      "type": "shell",
+      "command": "bun run docs:generate"
+    },
+    {
+      "label": "docs:check",
+      "type": "shell",
+      "command": "bun run docs:check"
+    },
+    {
+      "label": "manifest:generate",
+      "type": "shell",
+      "command": "bun run manifest:generate"
+    },
+    {
+      "label": "manifest:check",
+      "type": "shell",
+      "command": "bun run manifest:check"
+    },
+    {
+      "label": "conformance",
+      "type": "shell",
+      "command": "bun run conformance"
+    },
+    {
+      "label": "dev",
+      "type": "shell",
+      "command": "bun run dev",
+      "isBackground": true,
+      "problemMatcher": []
     },
     {
       "label": "gate",
