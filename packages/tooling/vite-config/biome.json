@@ -1,0 +1,4 @@
+{
+    "extends": ["@suaveplan/biome-config/biome.json", "@repo/biome-config/biome.json"],
+    "root": false
+}

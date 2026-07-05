@@ -28,5 +28,9 @@ Bun + Turborepo + Biome monorepo template. Drop an `_intro.md` at the repo root 
 <!-- begin:auto-docs -->
 ## Packages by category
 
-No packages yet. Scaffold your first package under `packages/<category>/<pkg>/`, then run `bun scripts/docs/generate-all-docs.ts` to populate this section.
+3 packages across 1 category. Each row links to the category's own README, which in turn lists every package and its first-paragraph description.
+
+| Category | Packages |
+|---|---:|
+| [`tooling`](./packages/tooling/README.md) | 3 |
 <!-- end:auto-docs -->

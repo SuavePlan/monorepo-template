@@ -1,0 +1,13 @@
+{
+    "name": "@repo/biome-config",
+    "version": "0.0.0",
+    "private": true,
+    "description": "This repo's own Biome rule overlay. Apps and packages extend both this and @suaveplan/biome-config directly (Biome's extends does not recurse through a wrapper), so a repo-wide rule tweak only has to happen in one file.",
+    "type": "module",
+    "sideEffects": false,
+    "exports": {
+        "./package.json": "./package.json",
+        "./biome.json": "./biome.json"
+    },
+    "files": ["biome.json", "README.md"]
+}

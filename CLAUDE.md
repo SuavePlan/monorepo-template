@@ -165,20 +165,25 @@ Why: the barrel **is** the contract; `export *` makes the contract whatever the 
 
 ### 6.5 Shared tooling foundations — every new package builds on these
 
-This template is part of the SuavePlan ecosystem, so new packages don't hand-roll their own lint/tsconfig/build/test setup — they extend the published foundation packages (already in this repo's root `devDependencies`, resolved from the private registry):
+This template is part of the SuavePlan ecosystem, so new packages don't hand-roll their own lint/tsconfig/build/test setup. For lint, TypeScript, and Vite config specifically, packages extend this repo's own `@repo/*` wrapper packages (`packages/tooling/{biome-config,typescript-config,vite-config}/`) rather than the published `@suaveplan/*-config` packages directly:
 
-- **`biome.json`** — `{ "extends": ["@suaveplan/biome-config/biome.json"], "root": false }`.
-- **`tsconfig.lib.json`** — `{ "extends": "@suaveplan/typescript-config/library.json", "compilerOptions": { "rootDir": "src", "outDir": "dist" }, ... }`. Use `library-browser.json` for browser-tier packages, `library-node.json` for server-tier, `react-library.json` for React components.
-- **`vite.config.ts`** — build via `@suaveplan/vite-config`, which derives rollup externals from the package's own manifest so published `dist/` never bakes in store paths.
+- **`biome.json`** — `{ "extends": ["@suaveplan/biome-config/biome.json", "@repo/biome-config/biome.json"], "root": false }`. **Both entries are required, in that order** — Biome's `extends` is not transitive (a config resolved via `extends` does not, in turn, process that target's own `extends`), so `@repo/biome-config` cannot wrap `@suaveplan/biome-config` internally the way the other two configs do. It's instead a small, standalone overrides fragment listed as the second parallel array entry, verified to merge correctly with later entries winning on conflicts. See `packages/tooling/biome-config/README.md` for the full explanation.
+- **`tsconfig.lib.json`** — `{ "extends": "@repo/typescript-config/library.json", "compilerOptions": { "rootDir": "src", "outDir": "dist" }, ... }`. Use `library-browser.json` for browser-tier packages, `library-node.json` for server-tier, `react-library.json` for React components. TypeScript's `extends` **is** transitive (verified), so this one genuinely wraps `@suaveplan/typescript-config` — one entry is enough.
+- **`vite.config.ts`** — `import { defineLibConfig } from "@repo/vite-config";`, which derives rollup externals from the package's own manifest so published `dist/` never bakes in store paths.
+
+Each `@repo/*-config` package is a thin, `"private": true` workspace-only wrapper around the matching `@suaveplan/*-config` package — see `packages/tooling/_intro.md`. This is a deliberate exception to rule 4 ("never re-export external deps for convenience"): that rule targets re-exporting runtime values to shorten an import path, which adds no value and rots silently. Extending a shared build/lint config is the opposite case — the `@repo/*` layer is this repo's single edit point for a repo-wide config tweak (an extra Biome rule, a compiler option, a Vite plugin), exactly analogous to how the root's own `tsconfig.base.json` already extends `@suaveplan/typescript-config/base.json`. Don't add a `@repo/*` wrapper for a dependency you're merely passing through unchanged with no such centralization purpose.
+
+Everything else still comes straight from the published `@suaveplan/*` packages, no local wrapper:
+
 - **`vitest.config.ts`** — `export default createTestConfig()` from `@suaveplan/testing/config` (see §15).
 - **Test files** — import runner primitives from `@suaveplan/testing/runner`, never directly from `vitest`/`bun:test` (see rule 11 and §7 of `openspec/AGENTS.md`).
 - **Errors** — extend `SuaveplanError` from `@suaveplan/error` and register codes via its `defineCodes(...)` helper (see §13) rather than hand-writing string literals or plain `Error` subclasses.
 - **Cross-package contracts and shared primitives** — `Clock`, `IdGenerator`, `Rng`, `LoggerLike`, `StorageLike`, and other structural interfaces referenced by ≥2 packages live in `@suaveplan/types` (zero-dep, types-only — see §12.3), not redeclared per package.
 - **Playwright E2E specs** (`e2e/*/`) — build on `@suaveplan/testing-e2e`'s config factory, `PageObject` base, and fixtures rather than a hand-rolled `playwright.config.ts`.
 
-The root's own `tsconfig.base.json` extends `@suaveplan/typescript-config/base.json` for the same reason — one source of truth for the compiler-strictness baseline, shared between the monorepo root and every package built inside it.
+The repo root's own `biome.json` (`root: true`), `tsconfig.base.json`, and `tsconfig.json` are intentionally left extending/authoring against `@suaveplan/*` directly, not `@repo/*` — the `@repo/*` layer exists for individual packages' and apps' own configs, not as a replacement for the root's already-authoritative config.
 
-All five of these — `@suaveplan/error`, `@suaveplan/types`, `@suaveplan/testing`, `@suaveplan/testing-e2e`, and the three `@suaveplan/*-config` packages — are already root `devDependencies` (§7), installed and ready before the first package is scaffolded.
+All of `@suaveplan/error`, `@suaveplan/types`, `@suaveplan/testing`, `@suaveplan/testing-e2e`, and the three `@suaveplan/*-config` packages are already root `devDependencies` (§7), installed and ready before the first package is scaffolded. The three `@repo/*-config` wrappers are workspace packages (`workspace:^`), not root deps — add them as `devDependencies` on each new package the same way.
 
 ---
 

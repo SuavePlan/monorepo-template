@@ -1,0 +1,45 @@
+{
+    "name": "@repo/vite-config",
+    "version": "0.0.0",
+    "private": true,
+    "description": "This repo's own Vite library build config extension point, layered on top of @suaveplan/vite-config. Apps and packages import this instead of the upstream config factory directly.",
+    "type": "module",
+    "sideEffects": false,
+    "exports": {
+        "./package.json": "./package.json",
+        ".": {
+            "import": {
+                "types": "./dist/index.d.ts",
+                "default": "./dist/index.js"
+            }
+        },
+        "./define-lib-config/define-lib-config": {
+            "import": {
+                "types": "./dist/define-lib-config/define-lib-config.d.ts",
+                "default": "./dist/define-lib-config/define-lib-config.js"
+            }
+        }
+    },
+    "scripts": {
+        "build": "vite build",
+        "lint": "bunx biome check src/",
+        "typecheck": "tsc --noEmit -p tsconfig.lib.json",
+        "test": "vitest run",
+        "test:coverage": "vitest run --coverage",
+        "docs:check": "bun ../../../scripts/docs/docs-check.ts ."
+    },
+    "dependencies": {
+        "@suaveplan/vite-config": "^0.1.1",
+        "tslib": "catalog:"
+    },
+    "devDependencies": {
+        "@repo/biome-config": "workspace:^",
+        "@repo/typescript-config": "workspace:^",
+        "@suaveplan/biome-config": "^0.1.5",
+        "@suaveplan/testing": "^0.1.0",
+        "@vitest/coverage-istanbul": "catalog:testing",
+        "typescript": "catalog:",
+        "vite": "catalog:build",
+        "vitest": "catalog:testing"
+    }
+}

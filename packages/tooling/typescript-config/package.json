@@ -1,0 +1,22 @@
+{
+    "name": "@repo/typescript-config",
+    "version": "0.0.0",
+    "private": true,
+    "description": "This repo's own tsconfig extension point, layered on top of @suaveplan/typescript-config. Apps and packages extend this, not the upstream presets directly.",
+    "type": "module",
+    "sideEffects": false,
+    "exports": {
+        "./package.json": "./package.json",
+        "./base.json": "./base.json",
+        "./library.json": "./library.json",
+        "./library-browser.json": "./library-browser.json",
+        "./library-node.json": "./library-node.json",
+        "./react-library.json": "./react-library.json",
+        "./test.json": "./test.json",
+        "./stories.json": "./stories.json"
+    },
+    "files": ["*.json", "README.md"],
+    "devDependencies": {
+        "@suaveplan/typescript-config": "^0.1.0"
+    }
+}
