@@ -4,9 +4,9 @@
   "description": "SuavePlan monorepo template — scaffolds a Bun + Turbo + Biome monorepo",
   "type": "module",
   "private": true,
-  "packageManager": "bun@1.3.14",
+  "packageManager": "bun@1.4.2",
   "engines": {
-    "bun": ">=1.3.14"
+    "bun": ">=1.4.2"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:tooling",
@@ -66,8 +66,8 @@
       "typescript": "5.9.2",
       "tslib": "2.6.2",
       "@types/node": "25.6.0",
-      "bun-types": "1.3.14",
-      "@types/bun": "1.3.14"
+      "bun-types": "1.4.2",
+      "@types/bun": "1.4.2"
     },
     "catalogs": {
       "tooling": {
